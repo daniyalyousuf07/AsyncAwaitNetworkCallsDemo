@@ -9,8 +9,8 @@ import Foundation
 
 
 extension NetworkService {
-    func get<T>() async throws -> Result<T, NetworkServiceError> where T : Decodable {
-        var request = urlRequest.makeURLRequest()
+    func get<T>(path: String) async throws -> Result<T, NetworkServiceError> where T : Decodable {
+        var request = urlRequest.makeURLRequest(path: path)
         request.httpMethod = "GET"
         
         let  (data, response) = try await session.loadData(from: request)

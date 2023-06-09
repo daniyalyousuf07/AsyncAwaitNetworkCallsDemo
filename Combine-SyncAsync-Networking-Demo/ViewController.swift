@@ -22,12 +22,10 @@ final class ViewController: UIViewController {
     private var input: PassthroughSubject<CatListViewModel.Input, Never> = .init()
     private var cancellable = Set<AnyCancellable>()
     
-    let service: NetworkService = DefaultNetworkService(session: URLSession.shared,
-                                                        urlRequest: DefaultURLRequestFactory(endpoint: DefaultEndpoint(path: "/v1/breeds")))
     var viewModel: CatListViewModel?
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel = CatListViewModel(service: service)
+        viewModel = CatListViewModel()
         view.addSubview(tableView)
         bindData()
         input.send(.viewDidAppear)

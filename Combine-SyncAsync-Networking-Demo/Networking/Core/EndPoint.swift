@@ -8,19 +8,17 @@
 import Foundation
 
 protocol Endpoint {
-    
-    var path: String { get set }
     var queryItems: [URLQueryItem]? { get set }
     
     var scheme: String? { get }
     var host: String? { get }
     var port: Int? { get }
     
-    var url: URL? { get }
+    func getURL(path: String) -> URL?
 }
 
 extension Endpoint {
-    var url: URL? {
+    func getURL(path: String) -> URL? {
         var components = URLComponents()
         components.scheme = scheme
         components.host = host
@@ -34,19 +32,19 @@ extension Endpoint {
 
 
 struct DefaultEndpoint: Endpoint {
-    var path: String
+   // var path: String
     var queryItems: [URLQueryItem]? = nil
     var scheme: String? = "https"
     var host: String? = "api.thecatapi.com"
     var port: Int? = nil
     
-    init(path: String) {
-        self.path = path
-    }
+//    init(path: String) {
+//        self.path = path
+//    }
 }
-
-extension DefaultEndpoint: ExpressibleByStringLiteral {
-    init(stringLiteral value: StringLiteralType) {
-        path = value
-    }
-}
+//
+//extension DefaultEndpoint: ExpressibleByStringLiteral {
+//    init(stringLiteral value: StringLiteralType) {
+//        path = value
+//    }
+//}

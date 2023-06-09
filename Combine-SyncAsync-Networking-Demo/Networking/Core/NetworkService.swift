@@ -12,7 +12,7 @@ protocol NetworkService {
     var session: Session { get set }
     var urlRequest: RequestFactory { get set }
     
-    func get<T: Decodable>() async throws -> Result<T, NetworkServiceError>
+    func get<T: Decodable>(path: String) async throws -> Result<T, NetworkServiceError>
 }
 
 
@@ -28,10 +28,5 @@ struct DefaultNetworkService: NetworkService {
         self.session = session
         self.urlRequest = urlRequest
         self.appKeychain = appKeychain
-    }
-    
-    init(resourcePath: String) {
-        let endpoint = DefaultEndpoint(path: resourcePath)
-        self.init(urlRequest: DefaultURLRequestFactory(endpoint: endpoint))
     }
 }

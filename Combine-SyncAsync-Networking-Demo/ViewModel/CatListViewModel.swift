@@ -8,17 +8,17 @@
 import Foundation
 import Combine
 
+//Testable
 protocol CatListProtocol: AnyObject {
-    var service: NetworkService { get }
     var catList: [CatBreed] { get  }
-    func fetchCats() async throws
-    init(service: NetworkService)
+    func fetchCats(path: String) async throws
+    init(catServiceRepository: CatServiceProtocol)
 }
 
 final class CatListViewModel: ObservableObject {
     private var task: Task<(), Error>?
     private var cancellable = Set<AnyCancellable>()
-    private(set) var service: NetworkService
+    private var catServiceRepository: CatServiceProtocol
     
     let screenTitle = "Cats"
     
@@ -37,8 +37,9 @@ final class CatListViewModel: ObservableObject {
     
     private let output: PassthroughSubject<Output, Never> = .init()
     
-    required init(service: NetworkService) {
-        self.service = service
+    required init(catServiceRepository: CatServiceProtocol = CatServiceRepository(service: DefaultNetworkService(session: URLSession.shared,
+                                                                                                                 urlRequest: DefaultURLRequestFactory(endpoint: DefaultEndpoint())))) {
+        self.catServiceRepository = catServiceRepository
     }
     
     ///Typesafe enum based bindings
@@ -47,7 +48,7 @@ final class CatListViewModel: ObservableObject {
             switch event {
             case .viewDidAppear:
                 self?.task =  Task { [weak self] in
-                    try await self?.fetchCats()
+                    try await self?.fetchCats(path: "/v1/breeds")
                 }
             case .refreshView:
                 self?.output.send(.refreshView)
@@ -58,8 +59,8 @@ final class CatListViewModel: ObservableObject {
         return output.eraseToAnyPublisher()
     }
     
-   @MainActor func fetchCats() async throws {
-        let result:  Result<[CatBreed], NetworkServiceError> = try await service.get()
+    @MainActor func fetchCats(path: String) async throws {
+        let result:  Result<[CatBreed], NetworkServiceError> = try await catServiceRepository.fetchCats(path: path)
         if case .success(let model) = result {
             self.catList = model
             self.output.send(.fetchCats(result: .success(model)))

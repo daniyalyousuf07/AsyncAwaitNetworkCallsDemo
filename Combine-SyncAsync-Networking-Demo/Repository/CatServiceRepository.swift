@@ -7,10 +7,11 @@
 
 import Foundation
 
+//Testable
 protocol CatServiceProtocol: AnyObject {
     var service: NetworkService { get }
     init(service: NetworkService)
-    func fetchCats() async throws -> Result<[CatBreed], NetworkServiceError>
+    func fetchCats(path: String) async throws -> Result<[CatBreed], NetworkServiceError>
 }
 
 
@@ -21,8 +22,8 @@ final class CatServiceRepository: CatServiceProtocol  {
         self.service = service
     }
     
-    func fetchCats() async throws -> Result<[CatBreed], NetworkServiceError> {
-        let result: Result<[CatBreed], NetworkServiceError> = try await service.get()
+    func fetchCats(path: String) async throws -> Result<[CatBreed], NetworkServiceError> {
+        let result: Result<[CatBreed], NetworkServiceError> = try await service.get(path: path)
         return result
     }
 }

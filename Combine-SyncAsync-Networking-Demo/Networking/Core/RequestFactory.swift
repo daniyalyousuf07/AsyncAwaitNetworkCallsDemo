@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - ServiceRequest
 protocol RequestFactory {
-    func makeURLRequest() -> URLRequest
+    func makeURLRequest(path: String) -> URLRequest
     var defaultHeaders: [String: String] { get }
     var endpoint: Endpoint { get set }
 }
@@ -32,8 +32,8 @@ struct DefaultURLRequestFactory: RequestFactory {
         self.keychain = keychain
     }
     
-    func makeURLRequest() -> URLRequest {
-        guard let url = endpoint.url else {
+    func makeURLRequest(path: String) -> URLRequest {
+        guard let url = endpoint.getURL(path: path) else {
             fatalError("Unable to make url request")
         }
         
