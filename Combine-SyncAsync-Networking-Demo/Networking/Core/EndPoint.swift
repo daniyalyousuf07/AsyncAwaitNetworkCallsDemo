@@ -32,19 +32,8 @@ extension Endpoint {
 
 
 struct DefaultEndpoint: Endpoint {
-   // var path: String
     var queryItems: [URLQueryItem]? = nil
     var scheme: String? = "https"
     var host: String? = "api.thecatapi.com"
     var port: Int? = nil
-    
-//    init(path: String) {
-//        self.path = path
-//    }
 }
-//
-//extension DefaultEndpoint: ExpressibleByStringLiteral {
-//    init(stringLiteral value: StringLiteralType) {
-//        path = value
-//    }
-//}
